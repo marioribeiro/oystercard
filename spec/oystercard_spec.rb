@@ -23,7 +23,7 @@ describe Oystercard do
     it { is_expected.to respond_to(:top_up).with(1).argument }
 
     it 'can top up the balance' do
-      expect{ subject.top_up 5 }.to change{ subject.balance }.by 5
+      expect{ subject.top_up Oystercard::MAXIMUM_BALANCE }.to change{ subject.balance }.by Oystercard::MAXIMUM_BALANCE
     end
 
     it 'raises an error if the maximum balance is exceeded' do
@@ -36,15 +36,19 @@ describe Oystercard do
 
   describe '#deduct' do
     it 'deducts an amount from the balance' do
-      card.top_up(20)
+      card.top_up(Oystercard::MAXIMUM_BALANCE)
       expect{ subject.deduct(5) }.to change { card.balance }.by -5
     end
   end
 
   describe '#touch_in' do
     it 'sets instance variable "in_journey" to true' do
+      card.top_up(Oystercard::MAXIMUM_BALANCE)
       card.touch_in
       expect(card).to be_in_journey
+    end
+    it 'prevents touching in if balance is below the minimum balance' do
+      expect{ card.touch_in}.to raise_error "Error: You need to top up"
     end
   end
 
@@ -60,5 +64,5 @@ describe Oystercard do
       expect(card.in_journey?).to be(true).or be(false)
     end
   end
- 
+
 end
