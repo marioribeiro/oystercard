@@ -7,6 +7,7 @@ describe Oystercard do
   it { is_expected.to respond_to(:balance) }
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:deduct).with(1).argument }
+  it { is_expected.to respond_to(:touch_in) }
 
   describe '#balance' do
     it 'returns the balance' do
