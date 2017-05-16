@@ -3,13 +3,15 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:card) { Oystercard.new }
+  let(:station) { double(:station) }
 
   it { is_expected.to respond_to(:balance) }
   it { is_expected.to respond_to(:top_up).with(1).argument }
-  it { is_expected.to respond_to(:touch_in) }
-  it { is_expected.to respond_to(:touch_out)}
+  it { is_expected.to respond_to(:touch_in).with(1).argument }
+  it { is_expected.to respond_to(:touch_out) }
   it { is_expected.to respond_to(:in_journey) }
   it { is_expected.to respond_to(:in_journey?)}
+  it { is_expected.to respond_to(:entry_station)}
 
 
   describe '#balance' do
@@ -35,11 +37,18 @@ describe Oystercard do
   describe '#touch_in' do
     it 'sets instance variable "in_journey" to true' do
       card.top_up(Oystercard::MAXIMUM_BALANCE)
-      card.touch_in
+      card.touch_in(station)
       expect(card).to be_in_journey
     end
+
     it 'prevents touching in if balance is below the minimum balance' do
-      expect{ card.touch_in}.to raise_error "Error: You need to top up"
+      expect{ card.touch_in(station) }.to raise_error "Error: You need to top up"
+    end
+
+    it 'sets the entry station' do
+      card.top_up(Oystercard::MAXIMUM_BALANCE)
+      card.touch_in(station)
+      expect(card.entry_station).to eq station
     end
   end
 
@@ -48,10 +57,19 @@ describe Oystercard do
       card.touch_out
       expect(card).to_not be_in_journey
     end
+
     it 'deducts minimum fare' do
       card.top_up(Oystercard::MINIMUM_BALANCE)
-      expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MINIMUM_FARE
+      expect{ card.touch_out }.to change{ card.balance }.by -Oystercard::MINIMUM_FARE  
     end
+
+    it 'set entry station to nil' do
+      card.top_up(Oystercard::MINIMUM_BALANCE)
+      card.touch_in(station)
+      card.touch_out
+      expect(card.entry_station).to eq nil
+    end
+
   end
 
   describe '#in_journey?' do
