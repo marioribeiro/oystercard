@@ -8,6 +8,8 @@ describe Oystercard do
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:deduct).with(1).argument }
   it { is_expected.to respond_to(:touch_in) }
+  it { is_expected.to respond_to(:touch_out)}
+  it { is_expected.to respond_to(:in_journey) }
 
   describe '#balance' do
     it 'returns the balance' do
@@ -34,6 +36,20 @@ describe Oystercard do
     it 'deducts an amount from the balance' do
       card.top_up(20)
       expect{ subject.deduct(5) }.to change { card.balance }.by -5
+    end
+  end
+
+  describe '#touch_in' do
+    it 'sets instance variable "in_journey" to true' do
+      card.touch_in
+      expect(card.in_journey).to eq true
+    end
+  end
+
+  describe '#touch_out' do
+    it 'sets instance variable "in_journey to false' do
+    card.touch_out
+    expect(card.in_journey).to eq false
     end
   end
  
