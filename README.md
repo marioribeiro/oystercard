@@ -57,5 +57,5 @@ I need to have the correct fare calculated
 
 Collaborators
 ====
-- Charlotte Feather @charliefea
-- Mario Ribeiro @marioribeiro
+- Charlotte Feather [@charliefea](https://github.com/Charliefea)
+- Mario Ribeiro [@marioribeiro](https://github.com/marioribeiro)
