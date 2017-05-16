@@ -10,6 +10,8 @@ describe Oystercard do
   it { is_expected.to respond_to(:touch_in) }
   it { is_expected.to respond_to(:touch_out)}
   it { is_expected.to respond_to(:in_journey) }
+  it { is_expected.to respond_to(:in_journey?)}
+
 
   describe '#balance' do
     it 'returns the balance' do
@@ -42,14 +44,20 @@ describe Oystercard do
   describe '#touch_in' do
     it 'sets instance variable "in_journey" to true' do
       card.touch_in
-      expect(card.in_journey).to eq true
+      expect(card).to be_in_journey
     end
   end
 
   describe '#touch_out' do
     it 'sets instance variable "in_journey to false' do
-    card.touch_out
-    expect(card.in_journey).to eq false
+      card.touch_out
+      expect(card).to_not be_in_journey
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'returns true or false' do
+      expect(card.in_journey?).to be(true).or be(false)
     end
   end
  
