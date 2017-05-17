@@ -11,6 +11,8 @@ class Journey
   end
 
   def end_journey(station)
+    # if start = nil do penalty fare and terminate journey
+    # if start = true do normal fare calculation and terminate journey
     @info[:end] = station
   end
 
