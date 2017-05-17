@@ -16,9 +16,9 @@ class Oystercard
     @balance += amount
   end
 
-  def touch_in(station)
+  def touch_in(station, journey = Journey.new)
     check_minimum_balance
-    @journey_history.push(entry_station: station, exit_station: nil)
+    journey.start_journey(station)
   end
 
   def touch_out(station)
@@ -26,10 +26,10 @@ class Oystercard
     @journey_history.last[:exit_station] = station
   end
 
-  def in_journey?
-    return false if journey_history.empty?
-    @journey_history.last[:exit_station].nil?
-  end
+  # def in_journey?
+  #   return false if journey_history.empty?
+  #   @journey_history.last[:exit_station].nil?
+  # end
 
   private
 
