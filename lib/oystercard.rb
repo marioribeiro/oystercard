@@ -22,16 +22,19 @@ class Oystercard
 
   def touch_in(station, journey = Journey.new)
     check_minimum_balance
-    save_journey if in_journey?
+    if in_journey?
+      save_journey
+      deduct(journey.fare)
+    end
     @started = true
     @journey = journey
     @journey.start_journey(station)
   end
 
   def touch_out(station)
-    deduct(MINIMUM_FARE)
     @journey = Journey.new if !@started
     @journey.end_journey(station)
+    deduct(journey.fare)
     @started = false
     save_journey
   end
