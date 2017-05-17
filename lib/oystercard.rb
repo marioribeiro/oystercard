@@ -12,7 +12,7 @@ class Oystercard
     @balance = 0
     @journey_history = []
     @started = false
-    @journey = {}
+    @journey = Journey.new
   end
 
   def top_up(amount)
@@ -22,7 +22,7 @@ class Oystercard
 
   def touch_in(station, journey = Journey.new)
     check_minimum_balance
-    @journey_history << @journey.info if in_journey?
+    save_journey if in_journey?
     @started = true
     @journey = journey
     @journey.start_journey(station)
@@ -32,12 +32,13 @@ class Oystercard
     deduct(MINIMUM_FARE)
     @journey = Journey.new if !@started
     @journey.end_journey(station)
-    @journey_history << @journey.info
     @started = false
+    save_journey
   end
 
   def in_journey?
-    return true if @journey.info[:start] != nil || @journey.info[:end] != nil
+    return true if @journey.info[:start] != nil && @journey.info[:end] == nil
+    return true if @journey.info[:start] == nil && @journey.info[:end] != nil
     false
   end
 
@@ -53,5 +54,9 @@ class Oystercard
 
   def check_minimum_balance
     fail "Error: You need to top up" if @balance < MINIMUM_BALANCE
+  end
+
+  def save_journey
+    @journey_history << @journey.info
   end
 end
