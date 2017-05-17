@@ -57,7 +57,7 @@ describe Oystercard do
     end
 
     it 'deducts minimum fare' do
-      expect{ card.touch_out(end_station) }.to change{ card.balance }.by -Oystercard::MINIMUM_FARE
+      expect{ card.touch_out(end_station) }.to change{ card.balance }.by -Journey::MINIMUM_FARE
     end
 
     it 'created a new entry in the journey_history hash including the entry and exit stations' do
