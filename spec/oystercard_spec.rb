@@ -3,9 +3,10 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:card) { Oystercard.new }
-  let(:entry_station) { double(:entry_station) }
-  let(:exit_station) { double(:exit_station) }
-  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+  let(:start_station) { double(:start) }
+  let(:end_station) { double(:exit) }
+  let(:journey){ double(:journey, start_journey: true, end_journey: true) }
+
 
   describe 'default' do
     it 'expect an empty list of journeys on initialization' do
@@ -34,20 +35,13 @@ describe Oystercard do
 
   describe '#touch_in' do
     it 'sets instance variable "in_journey" to true' do
-      pending("Underdevelopment")
       card.top_up(Oystercard::MAXIMUM_BALANCE)
-      card.touch_in(entry_station)
+      card.touch_in(start_station)
       expect(card).to be_in_journey
     end
 
     it 'prevents touching in if balance is below the minimum balance' do
-      expect{ card.touch_in(entry_station) }.to raise_error "Error: You need to top up"
-    end
-
-    it 'sets the entry station' do
-      card.top_up(Oystercard::MAXIMUM_BALANCE)
-      card.touch_in(entry_station)
-      expect(card.journey_history[-1][:entry_station]).to eq entry_station
+      expect{ card.touch_in(start_station) }.to raise_error "Error: You need to top up"
     end
   end
 
@@ -55,34 +49,39 @@ describe Oystercard do
 
     before do
       card.top_up(Oystercard::MINIMUM_BALANCE)
-      card.touch_in(entry_station)
+      card.touch_in(start_station)
     end
     it 'sets instance variable "in_journey to false' do
-      card.touch_out(exit_station)
+      card.touch_out(end_station)
       expect(card).to_not be_in_journey
     end
 
     it 'deducts minimum fare' do
-      expect{ card.touch_out(exit_station) }.to change{ card.balance }.by -Oystercard::MINIMUM_FARE
-    end
-
-
-    it 'sets exit station' do
-      card.touch_out(exit_station)
-      expect(card.journey_history[-1][:exit_station]).to eq exit_station
+      expect{ card.touch_out(end_station) }.to change{ card.balance }.by -Oystercard::MINIMUM_FARE
     end
 
     it 'created a new entry in the journey_history hash including the entry and exit stations' do
-
-      card.touch_out(exit_station)
-      expect(card.journey_history).to include journey
+      journey_info = { start: start_station, end: end_station }
+      card.touch_out(end_station)
+      expect(card.journey_history).to include journey_info
     end
   end
 
   describe '#in_journey?' do
-    pending("Under development")
     it 'returns true or false' do
       expect(card.in_journey?).to be(true).or be(false)
+    end
+  end
+
+  describe '#journey_history' do
+    before do
+      card.top_up(Oystercard::MINIMUM_BALANCE)
+    end
+    it 'shows a complete journey' do
+      journey_info = { start: start_station, end: end_station }
+      card.touch_in(start_station)
+      card.touch_out(end_station)
+      expect(card.journey_history).to include(journey_info)
     end
   end
 end
