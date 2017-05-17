@@ -59,3 +59,4 @@ Collaborators
 ====
 - Charlotte Feather [@charliefea](https://github.com/Charliefea)
 - Mario Ribeiro [@marioribeiro](https://github.com/marioribeiro)
+- Rita Sijelmass [@RSijelmass](https://github.com/RSijelmass)
