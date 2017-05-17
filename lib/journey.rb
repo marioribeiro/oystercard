@@ -1,20 +1,17 @@
 
 class Journey
-
-  attr_reader :travelling
+  attr_reader :info
 
   def initialize
-    @travelling = false
+    @info = { start: nil, end: nil }
   end
 
   def start_journey(station)
-    @travelling = true
-    @start_station = station
+    @info[:start] = station
   end
 
   def end_journey(station)
-    @travelling = false
-    @end_station = station
+    @info[:end] = station
   end
 
 end
