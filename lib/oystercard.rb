@@ -12,19 +12,18 @@ class Oystercard
   end
 
   def top_up(amount)
-    fail "Error: Maximum balance of #{MAXIMUM_BALANCE} exceeded" if @balance + amount > MAXIMUM_BALANCE
+    check_maximum_balance(amount)
     @balance += amount
   end
 
   def touch_in(station)
-    fail "Error: You need to top up" if @balance < MINIMUM_BALANCE
-    @entry_station = station
+    check_minimum_balance
     @journey_history.push(entry_station: station, exit_station: nil)
   end
 
   def touch_out(station)
     deduct(MINIMUM_FARE)
-    @journey_history[-1][:exit_station] = station
+    @journey_history.last[:exit_station] = station
   end
 
   def in_journey?
@@ -38,6 +37,11 @@ class Oystercard
     @balance -= amount
   end
 
+  def check_maximum_balance(amount)
+    fail "Error: Maximum balance of #{MAXIMUM_BALANCE} exceeded" if @balance + amount > MAXIMUM_BALANCE
+  end
+
+  def check_minimum_balance
+    fail "Error: You need to top up" if @balance < MINIMUM_BALANCE
+  end
 end
-
-
