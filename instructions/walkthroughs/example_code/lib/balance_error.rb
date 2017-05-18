@@ -1,0 +1,1 @@
+class BalanceError < StandardError ; end
