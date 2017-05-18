@@ -66,3 +66,19 @@ class Oystercard
     @journey_history << @journey.info
   end
 end
+
+card = Oystercard.new
+card.top_up(20)
+card.touch_in('a')
+card.touch_out('b')
+# card.touch_in('c')
+# card.touch_out('c')
+#
+# # puts
+# # p card.journey_log
+# card.touch_in('c')
+# card.touch_in('d')
+# p card.journey_log.current_journey
+# card.touch_out('e')
+# puts
+p card.journey_log.fare
