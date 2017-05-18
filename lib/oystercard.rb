@@ -5,13 +5,13 @@ class Oystercard
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
 
-  attr_reader :balance, :journey_history, :journey
+  attr_reader :balance, :journey_log, :journey
 
   def initialize
     @balance = 0
-    @journey_history = []
+    @journey_log = JourneyLog.new(Journey)
     @started = false
-    @journey = Journey.new
+    # @journey = Journey.new
   end
 
   def top_up(amount)
@@ -19,23 +19,27 @@ class Oystercard
     @balance += amount
   end
 
-  def touch_in(station, journey = Journey.new)
+  def touch_in(station) # TODO: decide how to implement current_journey?
     check_minimum_balance
-    if in_journey?
-      save_journey
-      deduct(journey.fare)
-    end
-    @started = true
-    @journey = journey
-    @journey.start_journey(station)
+    @journey_log.start(station)
+    # --------------------------------------------------------------------------
+    # if in_journey?
+    #   save_journey
+    #   deduct(journey.fare)
+    # end
+    # @started = true
+    # @journey = journey
+    # @journey.start_journey(station)
   end
 
   def touch_out(station)
-    @journey = Journey.new if !@started
-    @journey.end_journey(station)
-    deduct(journey.fare)
-    @started = false
-    save_journey
+    @journey_log.finish(station)
+    # deduct(@journey_log) TODO: Decide how to pass fare information to deduct method
+    # --------------------------------------------------------------------------
+    # @journey = Journey.new if !@started
+    # @journey.end_journey(station)
+    # @started = false
+    # save_journey
   end
 
   def in_journey?

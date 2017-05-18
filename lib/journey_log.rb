@@ -15,7 +15,8 @@ class JourneyLog
 
   def finish(exit_station)
     @journey.end_journey(exit_station)
-    @journeys << @journey.info
+    @journeys << @journey
+    @journey = nil
   end
 
   def current_journey
@@ -23,8 +24,3 @@ class JourneyLog
   end
 
 end
-
-jl = JourneyLog.new(Journey)
-jl.start("A")
-jl.finish("Z")
-print jl.journeys
