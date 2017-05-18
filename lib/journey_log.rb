@@ -13,4 +13,18 @@ class JourneyLog
     @journey.start_journey(entry_station)
   end
 
+  def finish(exit_station)
+    @journey.end_journey(exit_station)
+    @journeys << @journey.info
+  end
+
+  def current_journey
+    @journey ||= @journey_class.new
+  end
+
 end
+
+jl = JourneyLog.new(Journey)
+jl.start("A")
+jl.finish("Z")
+print jl.journeys
